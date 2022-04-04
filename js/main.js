@@ -1,6 +1,6 @@
 /* eslint-disable node/no-unsupported-features/node-builtins */
-(function($, moment, ClipboardJS, config) {
-    $('.article img:not(".not-gallery-item")').each(function() {
+(function ($, moment, ClipboardJS, config) {
+    $('.article img:not(".not-gallery-item")').each(function () {
         // wrap images with link and add caption if possible
         if ($(this).parent('a').length === 0) {
             $(this).wrap('<a class="gallery-item" href="' + $(this).attr('src') + '"></a>');
@@ -20,13 +20,13 @@
         $('.justified-gallery').justifiedGallery();
     }
 
-    if (typeof moment === 'function') {
-        $('.article-meta time').each(function() {
-            $(this).text(moment($(this).attr('datetime')).fromNow());
-        });
-    }
+    // if (typeof moment === 'function') {
+    //     $('.article-meta time').each(function() {
+    //         $(this).text(moment($(this).attr('datetime')).fromNow());
+    //     });
+    // }
 
-    $('.article > .content > table').each(function() {
+    $('.article > .content > table').each(function () {
         if ($(this).width() > $(this).parent().width()) {
             $(this).wrap('<div class="table-overflow"></div>');
         }
@@ -60,7 +60,7 @@
         && typeof config.article.highlight !== 'undefined') {
 
         $('figure.highlight').addClass('hljs');
-        $('figure.highlight .code .line span').each(function() {
+        $('figure.highlight .code .line span').each(function () {
             const classes = $(this).attr('class').split(/\s+/);
             if (classes.length === 1) {
                 $(this).addClass('hljs-' + classes[0]);
@@ -72,7 +72,7 @@
         const clipboard = config.article.highlight.clipboard;
         const fold = config.article.highlight.fold.trim();
 
-        $('figure.highlight').each(function() {
+        $('figure.highlight').each(function () {
             if ($(this).find('figcaption').length) {
                 $(this).find('figcaption').addClass('level is-mobile');
                 $(this).find('figcaption').append('<div class="level-left">');
@@ -87,7 +87,7 @@
         });
 
         if (typeof ClipboardJS !== 'undefined' && clipboard) {
-            $('figure.highlight').each(function() {
+            $('figure.highlight').each(function () {
                 const id = 'code-' + Date.now() + (Math.random() * 1000 | 0);
                 const button = '<a href="javascript:;" class="copy" title="Copy" data-clipboard-target="#' + id + ' .code"><i class="fas fa-copy"></i></a>';
                 $(this).attr('id', id);
@@ -97,7 +97,7 @@
         }
 
         if (fold) {
-            $('figure.highlight').each(function() {
+            $('figure.highlight').each(function () {
                 if ($(this).find('figcaption').find('span').length > 0) {
                     const span = $(this).find('figcaption').find('span');
                     if (span[0].innerText.indexOf('>folded') > -1) {
@@ -111,7 +111,7 @@
                 toggleFold(this, fold === 'folded');
             });
 
-            $('figure.highlight figcaption .fold').click(function() {
+            $('figure.highlight figcaption .fold').click(function () {
                 const $code = $(this).closest('figure.highlight');
                 toggleFold($code.eq(0), !$code.hasClass('folded'));
             });
@@ -120,6 +120,7 @@
 
     const $toc = $('#toc');
     if ($toc.length > 0) {
+        $toc.addClass('column-left is-sticky');
         const $mask = $('<div>');
         $mask.attr('id', 'toc-mask');
 
@@ -134,4 +135,8 @@
         $mask.on('click', toggleToc);
         $('.navbar-main .catalogue').on('click', toggleToc);
     }
+
+    //移动端优化显示
+    $('div.container div.card[data-type=tags]').addClass('is-hidden-mobile');
+    $('div.container div.card[data-type=archives]').addClass('is-hidden-mobile');
 }(jQuery, window.moment, window.ClipboardJS, window.IcarusThemeSettings));
